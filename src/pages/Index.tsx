@@ -20,13 +20,18 @@ import { Footer } from "@/components/Footer";
 import { QRModal } from "@/components/QRModal";
 import { AuctionModal } from "@/components/AuctionModal";
 import { DemoModal } from "@/components/DemoModal";
+import { UserDashboard } from "@/components/UserDashboard";
+import { useUserBids } from "@/hooks/useUserBids";
 import { auctionObjects } from "@/data/auctionData";
 import type { AuctionObject } from "@/data/auctionData";
 
 const Index = () => {
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
   const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
+  const [isDashboardOpen, setIsDashboardOpen] = useState(false);
   const [selectedObject, setSelectedObject] = useState<AuctionObject | null>(null);
+  
+  const { userBids, addBid, clearBids } = useUserBids();
 
   const scrollToSection = (sectionId: string) => {
     const element = document.querySelector(sectionId);
@@ -56,9 +61,16 @@ const Index = () => {
     scrollToSection("#objets");
   };
 
+  const handleBidPlaced = (object: AuctionObject, amount: number) => {
+    addBid(object, amount);
+  };
+
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      <Header 
+        onOpenDashboard={() => setIsDashboardOpen(true)}
+        userBidsCount={userBids.length}
+      />
       
       <main>
         <HeroSection onSimulateQR={handleSimulateQR} />
@@ -82,11 +94,18 @@ const Index = () => {
         isOpen={selectedObject !== null}
         object={selectedObject}
         onClose={() => setSelectedObject(null)}
+        onBidPlaced={handleBidPlaced}
       />
       <DemoModal
         isOpen={isDemoModalOpen}
         onClose={() => setIsDemoModalOpen(false)}
         onStartDemo={handleStartDemo}
+      />
+      <UserDashboard
+        isOpen={isDashboardOpen}
+        onClose={() => setIsDashboardOpen(false)}
+        userBids={userBids}
+        onClearBids={clearBids}
       />
     </div>
   );

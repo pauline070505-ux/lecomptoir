@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Clock, User, CheckCircle, AlertCircle } from "lucide-react";
+import { X, Clock, User, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import type { AuctionObject } from "@/data/auctionData";
 
@@ -8,9 +8,10 @@ interface AuctionModalProps {
   isOpen: boolean;
   object: AuctionObject | null;
   onClose: () => void;
+  onBidPlaced?: (object: AuctionObject, amount: number) => void;
 }
 
-export const AuctionModal = ({ isOpen, object, onClose }: AuctionModalProps) => {
+export const AuctionModal = ({ isOpen, object, onClose, onBidPlaced }: AuctionModalProps) => {
   const [bidAmount, setBidAmount] = useState("");
   const [currentBid, setCurrentBid] = useState(object?.currentBid || 0);
   const [bids, setBids] = useState(object?.bids || []);
@@ -39,6 +40,11 @@ export const AuctionModal = ({ isOpen, object, onClose }: AuctionModalProps) => 
     setBids([newBid, ...bids]);
     setCurrentBid(amount);
     setBidAmount("");
+
+    // Notify parent component about the bid
+    if (onBidPlaced) {
+      onBidPlaced(object, amount);
+    }
 
     toast.success("Enchère enregistrée !", {
       description: `Votre offre de ${amount} € a été prise en compte.`,
