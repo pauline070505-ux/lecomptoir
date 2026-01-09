@@ -1,6 +1,11 @@
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+
+interface HeaderProps {
+  onOpenDashboard?: () => void;
+  userBidsCount?: number;
+}
 
 const navLinks = [
   { href: "#concept", label: "Le Concept" },
@@ -11,7 +16,7 @@ const navLinks = [
   { href: "#contact", label: "Contact" },
 ];
 
-export const Header = () => {
+export const Header = ({ onOpenDashboard, userBidsCount = 0 }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const scrollToSection = (href: string) => {
@@ -31,7 +36,7 @@ export const Header = () => {
           </a>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex space-x-8">
+          <div className="hidden md:flex items-center space-x-8">
             {navLinks.map((link) => (
               <button
                 key={link.href}
@@ -41,16 +46,44 @@ export const Header = () => {
                 {link.label}
               </button>
             ))}
+            
+            {/* User Dashboard Button */}
+            <button
+              onClick={onOpenDashboard}
+              className="relative flex items-center gap-2 bg-primary hover:bg-accent text-primary-foreground px-4 py-2 rounded-full font-medium transition-colors"
+            >
+              <User size={18} />
+              <span>Mon Espace</span>
+              {userBidsCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-success text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                  {userBidsCount}
+                </span>
+              )}
+            </button>
           </div>
 
           {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden text-primary p-2"
-            aria-label="Toggle menu"
-          >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          <div className="flex items-center gap-2 md:hidden">
+            <button
+              onClick={onOpenDashboard}
+              className="relative text-primary p-2"
+              aria-label="Mon espace"
+            >
+              <User size={24} />
+              {userBidsCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-success text-white text-xs w-4 h-4 rounded-full flex items-center justify-center">
+                  {userBidsCount}
+                </span>
+              )}
+            </button>
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="text-primary p-2"
+              aria-label="Toggle menu"
+            >
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
       </nav>
 
