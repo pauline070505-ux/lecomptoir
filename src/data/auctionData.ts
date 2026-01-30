@@ -167,7 +167,7 @@ export const partners: Partner[] = [
     id: 5,
     name: "Métal Urbain",
     description: "Design et fabrication de mobilier et d'objets en métal recyclé et acier.",
-    logo: "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=100&h=100&fit=crop",
+    logo: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=100&h=100&fit=crop",
     location: "Paris, France",
     specialty: "Métal travaillé et patiné"
   },
