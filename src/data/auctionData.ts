@@ -38,7 +38,7 @@ export const auctionObjects: AuctionObject[] = [
     image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=300&fit=crop",
     category: "Mobilier",
     creator: "Atelier Bois & Ligne",
-    timeLeft: "2j 15h 30m",
+    timeLeft: "3j 12h 00m",
     bids: [
       { bidder: "Marie D.", amount: 320, time: "Il y a 2 heures" },
       { bidder: "Pierre L.", amount: 310, time: "Il y a 3 heures" },
@@ -55,7 +55,7 @@ export const auctionObjects: AuctionObject[] = [
     image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=400&h=300&fit=crop",
     category: "Décoration",
     creator: "Céramiques du Terroir",
-    timeLeft: "1j 8h 45m",
+    timeLeft: "3j 12h 00m",
     bids: [
       { bidder: "Jean P.", amount: 120, time: "Il y a 1 heure" },
       { bidder: "Claire B.", amount: 115, time: "Il y a 2 heures" },
@@ -72,7 +72,7 @@ export const auctionObjects: AuctionObject[] = [
     image: "https://images.unsplash.com/photo-1532372320572-cda25653a26d?w=400&h=300&fit=crop",
     category: "Mobilier",
     creator: "Atelier Bois & Ligne",
-    timeLeft: "3j 12h 20m",
+    timeLeft: "3j 12h 00m",
     bids: [
       { bidder: "Lucie T.", amount: 210, time: "Il y a 30 minutes" },
       { bidder: "Antoine G.", amount: 200, time: "Il y a 1 heure" },
@@ -89,7 +89,7 @@ export const auctionObjects: AuctionObject[] = [
     image: "https://images.unsplash.com/photo-1578500494198-246f612d3b3d?w=400&h=300&fit=crop",
     category: "Décoration",
     creator: "Céramiques du Terroir",
-    timeLeft: "5j 6h 10m",
+    timeLeft: "3j 12h 00m",
     bids: [
       { bidder: "Nicolas D.", amount: 90, time: "Il y a 3 heures" },
       { bidder: "Isabelle M.", amount: 85, time: "Il y a 5 heures" }
@@ -105,7 +105,7 @@ export const auctionObjects: AuctionObject[] = [
     image: "https://images.unsplash.com/photo-1503602642458-232111445657?w=400&h=300&fit=crop",
     category: "Mobilier",
     creator: "Atelier Bois & Ligne",
-    timeLeft: "4j 20h 15m",
+    timeLeft: "3j 12h 00m",
     bids: [
       { bidder: "Marc S.", amount: 185, time: "Il y a 45 minutes" },
       { bidder: "Caroline L.", amount: 175, time: "Il y a 2 heures" }
@@ -121,7 +121,7 @@ export const auctionObjects: AuctionObject[] = [
     image: "https://images.unsplash.com/photo-1524484485831-a92ffc0de03f?w=400&h=300&fit=crop",
     category: "Luminaire",
     creator: "Tissus & Patrimoine",
-    timeLeft: "6j 3h 40m",
+    timeLeft: "3j 12h 00m",
     bids: [
       { bidder: "Pauline R.", amount: 155, time: "Il y a 2 heures" },
       { bidder: "David M.", amount: 145, time: "Il y a 4 heures" },
