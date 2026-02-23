@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { Menu, X, User } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Menu, X, User, LogIn, LogOut } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "@/hooks/useAuth";
 
 interface HeaderProps {
   onOpenDashboard?: () => void;
@@ -18,6 +20,8 @@ const navLinks = [
 
 export const Header = ({ onOpenDashboard, userBidsCount = 0 }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
 
   const scrollToSection = (href: string) => {
     const element = document.querySelector(href);
@@ -47,35 +51,63 @@ export const Header = ({ onOpenDashboard, userBidsCount = 0 }: HeaderProps) => {
               </button>
             ))}
             
-            {/* User Dashboard Button */}
-            <button
-              onClick={onOpenDashboard}
-              className="relative flex items-center gap-2 bg-primary hover:bg-accent text-primary-foreground px-4 py-2 rounded-full font-medium transition-colors"
-            >
-              <User size={18} />
-              <span>Mon Espace</span>
-              {userBidsCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-success text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-                  {userBidsCount}
-                </span>
-              )}
-            </button>
+            {user ? (
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={onOpenDashboard}
+                  className="relative flex items-center gap-2 bg-primary hover:bg-accent text-primary-foreground px-4 py-2 rounded-full font-medium transition-colors"
+                >
+                  <User size={18} />
+                  <span>Mon Espace</span>
+                  {userBidsCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-success text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                      {userBidsCount}
+                    </span>
+                  )}
+                </button>
+                <button
+                  onClick={signOut}
+                  className="text-muted-foreground hover:text-foreground transition-colors p-2"
+                  title="Se déconnecter"
+                >
+                  <LogOut size={18} />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => navigate("/auth")}
+                className="flex items-center gap-2 bg-primary hover:bg-accent text-primary-foreground px-4 py-2 rounded-full font-medium transition-colors"
+              >
+                <LogIn size={18} />
+                <span>Connexion</span>
+              </button>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
           <div className="flex items-center gap-2 md:hidden">
-            <button
-              onClick={onOpenDashboard}
-              className="relative text-primary p-2"
-              aria-label="Mon espace"
-            >
-              <User size={24} />
-              {userBidsCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-success text-white text-xs w-4 h-4 rounded-full flex items-center justify-center">
-                  {userBidsCount}
-                </span>
-              )}
-            </button>
+            {user ? (
+              <button
+                onClick={onOpenDashboard}
+                className="relative text-primary p-2"
+                aria-label="Mon espace"
+              >
+                <User size={24} />
+                {userBidsCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-success text-white text-xs w-4 h-4 rounded-full flex items-center justify-center">
+                    {userBidsCount}
+                  </span>
+                )}
+              </button>
+            ) : (
+              <button
+                onClick={() => navigate("/auth")}
+                className="text-primary p-2"
+                aria-label="Connexion"
+              >
+                <LogIn size={24} />
+              </button>
+            )}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="text-primary p-2"
@@ -107,6 +139,14 @@ export const Header = ({ onOpenDashboard, userBidsCount = 0 }: HeaderProps) => {
                     {link.label}
                   </button>
                 ))}
+                {user && (
+                  <button
+                    onClick={() => { signOut(); setIsMobileMenuOpen(false); }}
+                    className="py-2 text-destructive hover:text-destructive/80 transition-colors text-left font-medium"
+                  >
+                    Se déconnecter
+                  </button>
+                )}
               </div>
             </div>
           </motion.div>
