@@ -228,10 +228,6 @@ export const UserDashboard = ({ isOpen, onClose, userBids, onClearBids }: UserDa
               </>
             )}
 
-            {/* Disclaimer */}
-            <p className="text-xs text-muted-foreground text-center mt-6 pt-4 border-t border-border">
-              ⚠️ Simulation d'enchères - Les données sont stockées localement sur votre appareil
-            </p>
           </motion.div>
         </motion.div>
       )}

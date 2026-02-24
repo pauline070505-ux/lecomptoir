@@ -20,7 +20,7 @@ export const AuctionSection = ({ onOpenAuction }: AuctionSectionProps) => {
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-4">
-            Objets en enchères (simulation)
+            Objets en enchères
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             Découvrez une sélection d'objets actuellement disponibles. Chaque
