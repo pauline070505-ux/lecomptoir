@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Info, Clock } from "lucide-react";
-import type { AuctionObject } from "@/data/auctionData";
+import type { AuctionObject } from "@/hooks/useAuctionObjects";
 
 interface AuctionCardProps {
   object: AuctionObject;
