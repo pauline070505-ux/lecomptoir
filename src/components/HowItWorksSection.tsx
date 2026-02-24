@@ -49,11 +49,7 @@ export const HowItWorksSection = () => {
             Comment ça marche
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Un processus simple pour une expérience unique.{" "}
-            <strong className="text-primary">
-              Note : il s'agit d'une simulation d'enchères pour ce projet
-              étudiant.
-            </strong>
+            Un processus simple pour une expérience unique.
           </p>
         </motion.div>
 

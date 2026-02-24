@@ -39,19 +39,6 @@ export const AuctionSection = ({ onOpenAuction }: AuctionSectionProps) => {
           ))}
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          viewport={{ once: true }}
-          className="text-center mt-12"
-        >
-          <p className="text-muted-foreground flex items-center justify-center gap-2">
-            <Info size={16} className="text-primary" />
-            Ces enchères sont simulées dans le cadre de ce projet étudiant.
-            Aucun paiement réel n'est effectué.
-          </p>
-        </motion.div>
       </div>
     </section>
   );

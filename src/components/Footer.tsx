@@ -29,8 +29,8 @@ export const Footer = () => {
           <div>
             <h3 className="font-serif text-2xl font-semibold mb-4">Le Comptoir</h3>
             <p className="text-primary-foreground/70">
-              Un projet étudiant explorant de nouvelles formes de consommation
-              responsable et de valorisation de l'artisanat local.
+              De nouvelles formes de consommation responsable et de valorisation
+              de l'artisanat local.
             </p>
           </div>
 
@@ -66,17 +66,12 @@ export const Footer = () => {
                 </a>
               ))}
             </div>
-            <p className="text-primary-foreground/50 text-sm">
-              Projet académique - Tous les éléments présentés sont fictifs et
-              servent à illustrer le concept.
-            </p>
           </div>
         </div>
 
         <div className="border-t border-primary-foreground/10 mt-8 pt-8 text-center text-primary-foreground/50 text-sm">
           <p>
-            © 2024 Le Comptoir - Projet conceptuel. Design et développement dans
-            le cadre d'un projet étudiant.
+            © 2024 Le Comptoir - Tous droits réservés.
           </p>
         </div>
       </div>
