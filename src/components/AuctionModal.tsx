@@ -1,8 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Clock, User, AlertCircle } from "lucide-react";
+import { X, Clock, User } from "lucide-react";
 import { toast } from "sonner";
-import type { AuctionObject } from "@/data/auctionData";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAuctionBids } from "@/hooks/useAuctionObjects";
+import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import type { AuctionObject } from "@/hooks/useAuctionObjects";
 
 interface AuctionModalProps {
   isOpen: boolean;
@@ -13,14 +17,31 @@ interface AuctionModalProps {
 
 export const AuctionModal = ({ isOpen, object, onClose, onBidPlaced }: AuctionModalProps) => {
   const [bidAmount, setBidAmount] = useState("");
-  const [currentBid, setCurrentBid] = useState(object?.currentBid || 0);
-  const [bids, setBids] = useState(object?.bids || []);
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { data: bids = [], refetch: refetchBids } = useAuctionBids(object?.id ?? null);
+
+  const currentBid = bids.length > 0 ? bids[0].amount : (object?.currentBid || 0);
+
+  useEffect(() => {
+    setBidAmount("");
+  }, [object?.id]);
 
   if (!object) return null;
 
   const minBid = currentBid + object.minBidIncrement;
 
-  const handleBid = () => {
+  const handleBid = async () => {
+    if (!user) {
+      toast.error("Connexion requise", {
+        description: "Vous devez être connecté pour enchérir.",
+      });
+      navigate("/auth");
+      onClose();
+      return;
+    }
+
     const amount = parseInt(bidAmount);
 
     if (isNaN(amount) || amount < minBid) {
@@ -30,25 +51,30 @@ export const AuctionModal = ({ isOpen, object, onClose, onBidPlaced }: AuctionMo
       return;
     }
 
-    // Simulate placing a bid
-    const newBid = {
-      bidder: "Vous",
-      amount: amount,
-      time: "À l'instant",
-    };
-
-    setBids([newBid, ...bids]);
-    setCurrentBid(amount);
-    setBidAmount("");
-
-    // Notify parent component about the bid
     if (onBidPlaced) {
-      onBidPlaced(object, amount);
+      await onBidPlaced(object, amount);
     }
 
+    // Refetch data
+    await refetchBids();
+    await queryClient.invalidateQueries({ queryKey: ["auction_objects"] });
+
+    setBidAmount("");
     toast.success("Enchère enregistrée !", {
       description: `Votre offre de ${amount} € a été prise en compte.`,
     });
+  };
+
+  const formatTime = (dateStr: string) => {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMin = Math.floor(diffMs / 60000);
+    if (diffMin < 1) return "À l'instant";
+    if (diffMin < 60) return `Il y a ${diffMin} min`;
+    const diffH = Math.floor(diffMin / 60);
+    if (diffH < 24) return `Il y a ${diffH}h`;
+    return date.toLocaleDateString("fr-FR");
   };
 
   return (
@@ -172,7 +198,7 @@ export const AuctionModal = ({ isOpen, object, onClose, onBidPlaced }: AuctionMo
                 <div className="space-y-2 max-h-40 overflow-y-auto">
                   {bids.map((bid, index) => (
                     <div
-                      key={index}
+                      key={bid.id}
                       className={`flex justify-between items-center p-3 rounded-lg ${
                         index === 0 ? "bg-success/10" : "bg-background"
                       }`}
@@ -180,7 +206,7 @@ export const AuctionModal = ({ isOpen, object, onClose, onBidPlaced }: AuctionMo
                       <div className="flex items-center gap-2">
                         <User size={16} className="text-muted-foreground" />
                         <span className="font-medium text-foreground">
-                          {bid.bidder}
+                          {bid.bidder_name}
                         </span>
                         {index === 0 && (
                           <span className="text-xs bg-success/20 text-success px-2 py-0.5 rounded">
@@ -190,20 +216,13 @@ export const AuctionModal = ({ isOpen, object, onClose, onBidPlaced }: AuctionMo
                       </div>
                       <div className="text-right">
                         <p className="font-bold text-foreground">{bid.amount} €</p>
-                        <p className="text-xs text-muted-foreground">{bid.time}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {formatTime(bid.created_at)}
+                        </p>
                       </div>
                     </div>
                   ))}
                 </div>
-              </div>
-
-              {/* Disclaimer */}
-              <div className="flex items-start gap-2 text-sm text-muted-foreground bg-background p-3 rounded-lg">
-                <AlertCircle size={16} className="text-warning mt-0.5 flex-shrink-0" />
-                <p>
-                  Ceci est une simulation d'enchères. Aucun paiement ni engagement
-                  réel n'est requis.
-                </p>
               </div>
             </div>
           </motion.div>

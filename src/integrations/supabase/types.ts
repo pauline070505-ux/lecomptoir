@@ -14,6 +14,83 @@ export type Database = {
   }
   public: {
     Tables: {
+      auction_objects: {
+        Row: {
+          category: string
+          created_at: string
+          creator: string
+          current_bid: number
+          description: string
+          id: number
+          image: string
+          min_bid_increment: number
+          name: string
+          starting_price: number
+          time_left: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          creator: string
+          current_bid: number
+          description: string
+          id?: number
+          image: string
+          min_bid_increment: number
+          name: string
+          starting_price: number
+          time_left?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          creator?: string
+          current_bid?: number
+          description?: string
+          id?: number
+          image?: string
+          min_bid_increment?: number
+          name?: string
+          starting_price?: number
+          time_left?: string
+        }
+        Relationships: []
+      }
+      bids: {
+        Row: {
+          amount: number
+          auction_object_id: number
+          bidder_name: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          auction_object_id: number
+          bidder_name: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          auction_object_id?: number
+          bidder_name?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bids_auction_object_id_fkey"
+            columns: ["auction_object_id"]
+            isOneToOne: false
+            referencedRelation: "auction_objects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null

@@ -22,8 +22,8 @@ import { AuctionModal } from "@/components/AuctionModal";
 import { DemoModal } from "@/components/DemoModal";
 import { UserDashboard } from "@/components/UserDashboard";
 import { useUserBids } from "@/hooks/useUserBids";
-import { auctionObjects } from "@/data/auctionData";
-import type { AuctionObject } from "@/data/auctionData";
+import { useAuctionObjects } from "@/hooks/useAuctionObjects";
+import type { AuctionObject } from "@/hooks/useAuctionObjects";
 
 const Index = () => {
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
@@ -31,7 +31,8 @@ const Index = () => {
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
   const [selectedObject, setSelectedObject] = useState<AuctionObject | null>(null);
   
-  const { userBids, addBid, clearBids } = useUserBids();
+  const { userBids, addBid, clearBids, refetchBids } = useUserBids();
+  const { data: auctionObjects = [] } = useAuctionObjects();
 
   const scrollToSection = (sectionId: string) => {
     const element = document.querySelector(sectionId);
@@ -50,10 +51,11 @@ const Index = () => {
 
   const handleQRSimulateAuction = () => {
     setIsQRModalOpen(false);
-    // Open a random auction
-    const randomObject =
-      auctionObjects[Math.floor(Math.random() * auctionObjects.length)];
-    setSelectedObject(randomObject);
+    if (auctionObjects.length > 0) {
+      const randomObject =
+        auctionObjects[Math.floor(Math.random() * auctionObjects.length)];
+      setSelectedObject(randomObject);
+    }
   };
 
   const handleStartDemo = () => {
@@ -61,8 +63,8 @@ const Index = () => {
     scrollToSection("#objets");
   };
 
-  const handleBidPlaced = (object: AuctionObject, amount: number) => {
-    addBid(object, amount);
+  const handleBidPlaced = async (object: AuctionObject, amount: number) => {
+    await addBid(object, amount);
   };
 
   return (
