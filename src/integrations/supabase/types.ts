@@ -21,6 +21,7 @@ export type Database = {
           creator: string
           current_bid: number
           description: string
+          ends_at: string
           id: number
           image: string
           min_bid_increment: number
@@ -34,6 +35,7 @@ export type Database = {
           creator: string
           current_bid: number
           description: string
+          ends_at?: string
           id?: number
           image: string
           min_bid_increment: number
@@ -47,6 +49,7 @@ export type Database = {
           creator?: string
           current_bid?: number
           description?: string
+          ends_at?: string
           id?: number
           image?: string
           min_bid_increment?: number
