@@ -126,7 +126,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      validate_and_insert_bid: {
+        Args: {
+          p_amount: number
+          p_auction_object_id: number
+          p_bidder_name: string
+          p_user_id: string
+        }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never
