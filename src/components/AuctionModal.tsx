@@ -32,7 +32,7 @@ export const AuctionModal = ({ isOpen, object, onClose, onBidPlaced }: AuctionMo
 
   if (!object) return null;
 
-  const minBid = currentBid + object.startingPrice;
+  const minBid = Math.max(object.startingPrice, currentBid + 1);
 
   const handleBid = async () => {
     if (!user) {
@@ -165,7 +165,7 @@ export const AuctionModal = ({ isOpen, object, onClose, onBidPlaced }: AuctionMo
               {/* Bid input */}
               <div>
                 <label className="block text-foreground font-medium mb-2">
-                  Votre offre (minimum {minBid} € — incrément de {object.startingPrice} €)
+                  Votre offre (minimum {minBid} €)
                 </label>
                 <div className="flex gap-3">
                   <div className="relative flex-1">
