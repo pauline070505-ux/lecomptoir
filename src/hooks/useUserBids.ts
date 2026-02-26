@@ -85,11 +85,11 @@ export const useUserBids = () => {
         user.email?.split("@")[0] ||
         "Anonyme";
 
-      const { error } = await supabase.from("bids").insert({
-        auction_object_id: object.id,
-        user_id: user.id,
-        bidder_name: displayName,
-        amount,
+      const { error } = await supabase.rpc("validate_and_insert_bid", {
+        p_auction_object_id: object.id,
+        p_user_id: user.id,
+        p_bidder_name: displayName,
+        p_amount: amount,
       });
 
       if (!error) {
