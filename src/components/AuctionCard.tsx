@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Info, Clock } from "lucide-react";
 import type { AuctionObject } from "@/hooks/useAuctionObjects";
+import { useCountdown } from "@/hooks/useCountdown";
 
 interface AuctionCardProps {
   object: AuctionObject;
@@ -9,6 +10,8 @@ interface AuctionCardProps {
 }
 
 export const AuctionCard = ({ object, onBid, onViewDetails }: AuctionCardProps) => {
+  const timeLeft = useCountdown(object.endsAt);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -53,7 +56,7 @@ export const AuctionCard = ({ object, onBid, onViewDetails }: AuctionCardProps) 
           </div>
           <div className="mt-2 flex items-center gap-1 text-warning">
             <Clock size={14} />
-            <p className="text-sm font-medium">{object.timeLeft}</p>
+            <p className="text-sm font-medium">{timeLeft}</p>
           </div>
         </div>
 

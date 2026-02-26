@@ -12,6 +12,7 @@ export interface AuctionObject {
   category: string;
   creator: string;
   timeLeft: string;
+  endsAt: string | null;
 }
 
 export interface Bid {
@@ -33,6 +34,7 @@ const mapRow = (row: any): AuctionObject => ({
   category: row.category,
   creator: row.creator,
   timeLeft: row.time_left,
+  endsAt: row.ends_at,
 });
 
 export const useAuctionObjects = () => {

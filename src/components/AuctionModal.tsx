@@ -6,6 +6,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useAuctionBids } from "@/hooks/useAuctionObjects";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import { useCountdown } from "@/hooks/useCountdown";
 import type { AuctionObject } from "@/hooks/useAuctionObjects";
 
 interface AuctionModalProps {
@@ -21,6 +22,7 @@ export const AuctionModal = ({ isOpen, object, onClose, onBidPlaced }: AuctionMo
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { data: bids = [], refetch: refetchBids } = useAuctionBids(object?.id ?? null);
+  const timeLeft = useCountdown(object?.endsAt ?? null);
 
   const currentBid = bids.length > 0 ? bids[0].amount : (object?.currentBid || 0);
 
@@ -30,7 +32,7 @@ export const AuctionModal = ({ isOpen, object, onClose, onBidPlaced }: AuctionMo
 
   if (!object) return null;
 
-  const minBid = currentBid + object.minBidIncrement;
+  const minBid = currentBid + object.startingPrice;
 
   const handleBid = async () => {
     if (!user) {
@@ -154,7 +156,7 @@ export const AuctionModal = ({ isOpen, object, onClose, onBidPlaced }: AuctionMo
                     <p className="text-sm text-muted-foreground">Temps restant</p>
                     <p className="text-lg font-bold text-warning flex items-center justify-center gap-1">
                       <Clock size={16} />
-                      {object.timeLeft}
+                      {timeLeft}
                     </p>
                   </div>
                 </div>
@@ -163,7 +165,7 @@ export const AuctionModal = ({ isOpen, object, onClose, onBidPlaced }: AuctionMo
               {/* Bid input */}
               <div>
                 <label className="block text-foreground font-medium mb-2">
-                  Votre offre (minimum {minBid} €)
+                  Votre offre (minimum {minBid} € — incrément de {object.startingPrice} €)
                 </label>
                 <div className="flex gap-3">
                   <div className="relative flex-1">
