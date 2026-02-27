@@ -1,16 +1,34 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { X, TrendingUp, Package, Trophy, Clock, Trash2 } from "lucide-react";
+import { X, TrendingUp, Package, Trophy, Clock, Trash2, CreditCard, CheckCircle, Loader2 } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
 import type { UserBid } from "@/hooks/useUserBids";
+import type { WonAuction } from "@/hooks/useWonAuctions";
+import { useState } from "react";
 
 interface UserDashboardProps {
   isOpen: boolean;
   onClose: () => void;
   userBids: UserBid[];
   onClearBids: () => void;
+  wonAuctions?: WonAuction[];
+  onPayAuction?: (auctionId: number) => Promise<void>;
 }
 
-export const UserDashboard = ({ isOpen, onClose, userBids, onClearBids }: UserDashboardProps) => {
+export const UserDashboard = ({ isOpen, onClose, userBids, onClearBids, wonAuctions = [], onPayAuction }: UserDashboardProps) => {
+  const [payingId, setPayingId] = useState<number | null>(null);
+
+  const handlePay = async (auctionId: number) => {
+    if (!onPayAuction) return;
+    setPayingId(auctionId);
+    try {
+      await onPayAuction(auctionId);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setPayingId(null);
+    }
+  };
+
   // Prepare chart data - top bids sorted by amount
   const chartData = [...userBids]
     .sort((a, b) => b.bidAmount - a.bidAmount)
@@ -25,7 +43,6 @@ export const UserDashboard = ({ isOpen, onClose, userBids, onClearBids }: UserDa
   const totalAmount = userBids.reduce((sum, bid) => sum + bid.bidAmount, 0);
   const winningCount = userBids.filter((bid) => bid.isWinning).length;
 
-  // Colors for bars based on category
   const getCategoryColor = (category: string) => {
     switch (category) {
       case "Mobilier":
@@ -36,6 +53,31 @@ export const UserDashboard = ({ isOpen, onClose, userBids, onClearBids }: UserDa
         return "hsl(var(--warning))";
       default:
         return "hsl(var(--primary))";
+    }
+  };
+
+  const getPaymentStatusBadge = (status: string) => {
+    switch (status) {
+      case "awaiting_payment":
+        return (
+          <span className="text-xs bg-warning/20 text-warning px-2 py-0.5 rounded font-medium">
+            En attente de paiement
+          </span>
+        );
+      case "processing":
+        return (
+          <span className="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded font-medium">
+            En cours
+          </span>
+        );
+      case "paid":
+        return (
+          <span className="text-xs bg-success/20 text-success px-2 py-0.5 rounded font-medium flex items-center gap-1">
+            <CheckCircle size={12} /> Payé
+          </span>
+        );
+      default:
+        return null;
     }
   };
 
@@ -88,19 +130,68 @@ export const UserDashboard = ({ isOpen, onClose, userBids, onClearBids }: UserDa
               </div>
               <div className="bg-background rounded-lg p-4 text-center">
                 <Trophy className="w-6 h-6 text-warning mx-auto mb-2" />
-                <p className="text-2xl font-bold text-foreground">{winningCount}</p>
-                <p className="text-xs text-muted-foreground">Meilleures offres</p>
+                <p className="text-2xl font-bold text-foreground">{wonAuctions.length}</p>
+                <p className="text-xs text-muted-foreground">Enchères gagnées</p>
               </div>
               <div className="bg-background rounded-lg p-4 text-center">
                 <Clock className="w-6 h-6 text-accent mx-auto mb-2" />
                 <p className="text-2xl font-bold text-foreground">
-                  {userBids.length > 0 ? "En cours" : "-"}
+                  {wonAuctions.filter(a => a.paymentStatus === "awaiting_payment").length || "-"}
                 </p>
-                <p className="text-xs text-muted-foreground">Statut</p>
+                <p className="text-xs text-muted-foreground">À payer</p>
               </div>
             </div>
 
-            {userBids.length === 0 ? (
+            {/* Won Auctions - Pay Section */}
+            {wonAuctions.length > 0 && (
+              <div className="mb-8">
+                <h3 className="text-lg font-serif font-semibold text-foreground mb-4">
+                  🏆 Enchères remportées
+                </h3>
+                <div className="space-y-3">
+                  {wonAuctions.map((auction) => (
+                    <motion.div
+                      key={auction.id}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      className="flex items-center gap-4 bg-background rounded-lg p-4 border-2 border-warning/30"
+                    >
+                      <img
+                        src={auction.image}
+                        alt={auction.name}
+                        className="w-16 h-16 object-cover rounded-lg"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-medium text-foreground truncate">
+                          {auction.name}
+                        </h4>
+                        <p className="text-sm text-muted-foreground">{auction.category}</p>
+                        {getPaymentStatusBadge(auction.paymentStatus)}
+                      </div>
+                      <div className="text-right flex flex-col items-end gap-2">
+                        <p className="text-lg font-bold text-primary">{auction.winningBid} €</p>
+                        {(auction.paymentStatus === "awaiting_payment" || auction.paymentStatus === "processing") && (
+                          <button
+                            onClick={() => handlePay(auction.id)}
+                            disabled={payingId === auction.id}
+                            className="flex items-center gap-1.5 bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
+                          >
+                            {payingId === auction.id ? (
+                              <Loader2 size={14} className="animate-spin" />
+                            ) : (
+                              <CreditCard size={14} />
+                            )}
+                            Payer
+                          </button>
+                        )}
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {userBids.length === 0 && wonAuctions.length === 0 ? (
               <div className="text-center py-12 bg-background rounded-lg">
                 <Package className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
                 <h3 className="text-xl font-serif font-semibold text-foreground mb-2">
@@ -110,7 +201,7 @@ export const UserDashboard = ({ isOpen, onClose, userBids, onClearBids }: UserDa
                   Explorez nos objets et commencez à enchérir !
                 </p>
               </div>
-            ) : (
+            ) : userBids.length > 0 && (
               <>
                 {/* Chart Section */}
                 <div className="mb-8">

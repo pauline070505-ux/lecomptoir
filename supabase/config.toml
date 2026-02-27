@@ -1,1 +1,7 @@
 project_id = "xbowipahkrzpnonzzflq"
+
+[functions.create-winner-payment]
+verify_jwt = false
+
+[functions.finalize-auctions]
+verify_jwt = false

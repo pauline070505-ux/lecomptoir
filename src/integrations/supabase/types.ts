@@ -26,8 +26,10 @@ export type Database = {
           image: string
           min_bid_increment: number
           name: string
+          payment_status: string
           starting_price: number
           time_left: string
+          winner_user_id: string | null
         }
         Insert: {
           category: string
@@ -40,8 +42,10 @@ export type Database = {
           image: string
           min_bid_increment: number
           name: string
+          payment_status?: string
           starting_price: number
           time_left?: string
+          winner_user_id?: string | null
         }
         Update: {
           category?: string
@@ -54,8 +58,10 @@ export type Database = {
           image?: string
           min_bid_increment?: number
           name?: string
+          payment_status?: string
           starting_price?: number
           time_left?: string
+          winner_user_id?: string | null
         }
         Relationships: []
       }
@@ -129,6 +135,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      finalize_ended_auctions: { Args: never; Returns: undefined }
       validate_and_insert_bid: {
         Args: {
           p_amount: number
