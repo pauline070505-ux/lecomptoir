@@ -22,6 +22,7 @@ import { AuctionModal } from "@/components/AuctionModal";
 import { DemoModal } from "@/components/DemoModal";
 import { UserDashboard } from "@/components/UserDashboard";
 import { useUserBids } from "@/hooks/useUserBids";
+import { useWonAuctions } from "@/hooks/useWonAuctions";
 import { useAuctionObjects } from "@/hooks/useAuctionObjects";
 import type { AuctionObject } from "@/hooks/useAuctionObjects";
 
@@ -32,6 +33,7 @@ const Index = () => {
   const [selectedObject, setSelectedObject] = useState<AuctionObject | null>(null);
   
   const { userBids, addBid, clearBids, refetchBids } = useUserBids();
+  const { wonAuctions, payForAuction } = useWonAuctions();
   const { data: auctionObjects = [] } = useAuctionObjects();
 
   const scrollToSection = (sectionId: string) => {
@@ -108,6 +110,8 @@ const Index = () => {
         onClose={() => setIsDashboardOpen(false)}
         userBids={userBids}
         onClearBids={clearBids}
+        wonAuctions={wonAuctions}
+        onPayAuction={payForAuction}
       />
     </div>
   );
