@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Menu, X, User, LogIn, LogOut } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
+import { Menu, X, User, LogIn, LogOut, Ticket } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -50,7 +50,13 @@ export const Header = ({ onOpenDashboard, userBidsCount = 0 }: HeaderProps) => {
                 {link.label}
               </button>
             ))}
-            
+            <Link
+              to="/tickets"
+              className="flex items-center gap-1 text-foreground hover:text-primary transition-colors font-medium"
+            >
+              <Ticket size={16} />
+              Billetterie
+            </Link>
             {user ? (
               <div className="flex items-center gap-3">
                 <button
@@ -139,6 +145,14 @@ export const Header = ({ onOpenDashboard, userBidsCount = 0 }: HeaderProps) => {
                     {link.label}
                   </button>
                 ))}
+                <Link
+                  to="/tickets"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="py-2 flex items-center gap-2 text-foreground hover:text-primary transition-colors font-medium"
+                >
+                  <Ticket size={16} />
+                  Billetterie
+                </Link>
                 {user && (
                   <button
                     onClick={() => { signOut(); setIsMobileMenuOpen(false); }}
