@@ -145,6 +145,14 @@ export const Header = ({ onOpenDashboard, userBidsCount = 0 }: HeaderProps) => {
                     {link.label}
                   </button>
                 ))}
+                <Link
+                  to="/tickets"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="py-2 flex items-center gap-2 text-foreground hover:text-primary transition-colors font-medium"
+                >
+                  <Ticket size={16} />
+                  Billetterie
+                </Link>
                 {user && (
                   <button
                     onClick={() => { signOut(); setIsMobileMenuOpen(false); }}
