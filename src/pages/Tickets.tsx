@@ -1,23 +1,49 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { TicketCard } from "@/components/TicketCard";
 import { useUserBids } from "@/hooks/useUserBids";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
 const Tickets = () => {
   const { userBids } = useUserBids();
+  const { user } = useAuth();
   const [loadingTicket, setLoadingTicket] = useState<string | null>(null);
+  const [searchParams] = useSearchParams();
 
-  const handlePurchase = (type: string) => {
+  useEffect(() => {
+    const payment = searchParams.get("payment");
+    if (payment === "success") {
+      toast({ title: "Paiement réussi !", description: "Votre ticket a été acheté avec succès." });
+    } else if (payment === "cancelled") {
+      toast({ title: "Paiement annulé", description: "Le paiement a été annulé.", variant: "destructive" });
+    }
+  }, [searchParams]);
+
+  const handlePurchase = async (type: string) => {
+    if (!user) {
+      toast({ title: "Connexion requise", description: "Veuillez vous connecter pour acheter un ticket.", variant: "destructive" });
+      return;
+    }
+
     setLoadingTicket(type);
-    setTimeout(() => {
-      setLoadingTicket(null);
-      toast({
-        title: "Bientôt disponible",
-        description: "L'achat de tickets sera disponible prochainement.",
+    try {
+      const { data, error } = await supabase.functions.invoke("create-ticket-payment", {
+        body: { ticketType: type },
       });
-    }, 1000);
+
+      if (error) throw error;
+      if (data?.url) {
+        window.open(data.url, "_blank");
+      }
+    } catch (error: any) {
+      toast({ title: "Erreur", description: error.message || "Une erreur est survenue.", variant: "destructive" });
+    } finally {
+      setLoadingTicket(null);
+    }
   };
 
   return (
