@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Menu, X, User, LogIn, LogOut } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
+import { Menu, X, User, LogIn, LogOut, Ticket } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
 
