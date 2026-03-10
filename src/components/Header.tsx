@@ -50,7 +50,13 @@ export const Header = ({ onOpenDashboard, userBidsCount = 0 }: HeaderProps) => {
                 {link.label}
               </button>
             ))}
-            
+            <Link
+              to="/tickets"
+              className="flex items-center gap-1 text-foreground hover:text-primary transition-colors font-medium"
+            >
+              <Ticket size={16} />
+              Billetterie
+            </Link>
             {user ? (
               <div className="flex items-center gap-3">
                 <button
