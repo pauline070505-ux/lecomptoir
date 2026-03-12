@@ -99,7 +99,11 @@ const AdminDashboard = () => {
   };
 
   const handleUpdate = async (id: number) => {
-    const { error } = await supabase.from("auction_objects").update(form).eq("id", id);
+    const { ends_at, ...rest } = form;
+    const { error } = await supabase.from("auction_objects").update({
+      ...rest,
+      ends_at: new Date(ends_at).toISOString(),
+    }).eq("id", id);
     if (error) {
       toast({ title: "Erreur", description: error.message, variant: "destructive" });
     } else {
