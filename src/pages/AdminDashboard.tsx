@@ -130,6 +130,7 @@ const AdminDashboard = () => {
       name: obj.name, description: obj.description, category: obj.category,
       creator: obj.creator, image: obj.image, starting_price: obj.starting_price,
       current_bid: obj.current_bid, min_bid_increment: obj.min_bid_increment,
+      ends_at: new Date(obj.ends_at).toISOString().slice(0, 16),
     });
   };
 
