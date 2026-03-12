@@ -245,7 +245,7 @@ const AdminDashboard = () => {
                     {objects.map((obj) => (
                       <TableRow key={obj.id}>
                         {editingId === obj.id ? (
-                          <TableCell colSpan={6}>
+                          <TableCell colSpan={7}>
                             <div className="space-y-4">
                               {renderFormFields()}
                               <div className="flex gap-2">
