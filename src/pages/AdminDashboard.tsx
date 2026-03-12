@@ -275,6 +275,11 @@ const AdminDashboard = () => {
                             </TableCell>
                             <TableCell className="text-right">
                               <div className="flex justify-end gap-1">
+                                {!obj.winner_user_id && new Date(obj.ends_at) > new Date() && (
+                                  <Button size="icon" variant="ghost" className="text-destructive" title="Terminer maintenant" onClick={() => handleEndNow(obj.id)}>
+                                    <StopCircle className="h-4 w-4" />
+                                  </Button>
+                                )}
                                 <Button size="icon" variant="ghost" onClick={() => startEdit(obj)}>
                                   <Pencil className="h-4 w-4" />
                                 </Button>
