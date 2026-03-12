@@ -26,11 +26,13 @@ interface AuctionForm {
   starting_price: number;
   current_bid: number;
   min_bid_increment: number;
+  ends_at: string;
 }
 
 const emptyForm: AuctionForm = {
   name: "", description: "", category: "", creator: "", image: "",
   starting_price: 0, current_bid: 0, min_bid_increment: 1,
+  ends_at: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16),
 };
 
 const AdminDashboard = () => {
