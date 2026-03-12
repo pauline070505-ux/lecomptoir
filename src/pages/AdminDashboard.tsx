@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import {
   ShieldCheck, LogOut, Package, Gavel, Trophy, Clock,
-  Plus, Pencil, Trash2, X, Save,
+  Plus, Pencil, Trash2, X, Save, StopCircle,
 } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 
