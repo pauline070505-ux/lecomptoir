@@ -265,6 +265,9 @@ const AdminDashboard = () => {
                             <TableCell>{obj.category}</TableCell>
                             <TableCell>{obj.starting_price} €</TableCell>
                             <TableCell>{obj.current_bid} €</TableCell>
+                            <TableCell className="text-sm">
+                              {new Date(obj.ends_at).toLocaleString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" })}
+                            </TableCell>
                             <TableCell>
                               {obj.winner_user_id
                                 ? obj.payment_status === "paid"
