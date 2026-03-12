@@ -237,6 +237,7 @@ const AdminDashboard = () => {
                       <TableHead>Catégorie</TableHead>
                       <TableHead>Prix départ</TableHead>
                       <TableHead>Enchère actuelle</TableHead>
+                      <TableHead>Fin</TableHead>
                       <TableHead>Statut</TableHead>
                       <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
