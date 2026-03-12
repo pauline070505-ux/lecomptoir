@@ -153,6 +153,14 @@ const AdminDashboard = () => {
           />
         </div>
       ))}
+      <div className="space-y-1">
+        <Label>Fin de l'enchère</Label>
+        <Input
+          type="datetime-local"
+          value={form.ends_at}
+          onChange={(e) => setForm({ ...form, ends_at: e.target.value })}
+        />
+      </div>
       <div className="md:col-span-2 space-y-1">
         <Label>Description</Label>
         <textarea
