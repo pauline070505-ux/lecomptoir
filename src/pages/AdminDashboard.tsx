@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import {
   ShieldCheck, LogOut, Package, Gavel, Trophy, Clock,
-  Plus, Pencil, Trash2, X, Save,
+  Plus, Pencil, Trash2, X, Save, StopCircle,
 } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 
@@ -26,11 +26,13 @@ interface AuctionForm {
   starting_price: number;
   current_bid: number;
   min_bid_increment: number;
+  ends_at: string;
 }
 
 const emptyForm: AuctionForm = {
   name: "", description: "", category: "", creator: "", image: "",
   starting_price: 0, current_bid: 0, min_bid_increment: 1,
+  ends_at: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16),
 };
 
 const AdminDashboard = () => {
@@ -65,10 +67,26 @@ const AdminDashboard = () => {
     navigate("/admin/login");
   };
 
+  const handleEndNow = async (id: number) => {
+    if (!confirm("Terminer cette enchère maintenant ?")) return;
+    const { error } = await supabase
+      .from("auction_objects")
+      .update({ ends_at: new Date().toISOString() })
+      .eq("id", id);
+    if (error) {
+      toast({ title: "Erreur", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Enchère terminée !" });
+      fetchObjects();
+    }
+  };
+
   const handleAdd = async () => {
+    const { ends_at, ...rest } = form;
     const { error } = await supabase.from("auction_objects").insert({
-      ...form,
+      ...rest,
       current_bid: form.starting_price,
+      ends_at: new Date(ends_at).toISOString(),
     });
     if (error) {
       toast({ title: "Erreur", description: error.message, variant: "destructive" });
@@ -81,7 +99,11 @@ const AdminDashboard = () => {
   };
 
   const handleUpdate = async (id: number) => {
-    const { error } = await supabase.from("auction_objects").update(form).eq("id", id);
+    const { ends_at, ...rest } = form;
+    const { error } = await supabase.from("auction_objects").update({
+      ...rest,
+      ends_at: new Date(ends_at).toISOString(),
+    }).eq("id", id);
     if (error) {
       toast({ title: "Erreur", description: error.message, variant: "destructive" });
     } else {
@@ -108,6 +130,7 @@ const AdminDashboard = () => {
       name: obj.name, description: obj.description, category: obj.category,
       creator: obj.creator, image: obj.image, starting_price: obj.starting_price,
       current_bid: obj.current_bid, min_bid_increment: obj.min_bid_increment,
+      ends_at: new Date(obj.ends_at).toISOString().slice(0, 16),
     });
   };
 
@@ -130,6 +153,14 @@ const AdminDashboard = () => {
           />
         </div>
       ))}
+      <div className="space-y-1">
+        <Label>Fin de l'enchère</Label>
+        <Input
+          type="datetime-local"
+          value={form.ends_at}
+          onChange={(e) => setForm({ ...form, ends_at: e.target.value })}
+        />
+      </div>
       <div className="md:col-span-2 space-y-1">
         <Label>Description</Label>
         <textarea
@@ -206,6 +237,7 @@ const AdminDashboard = () => {
                       <TableHead>Catégorie</TableHead>
                       <TableHead>Prix départ</TableHead>
                       <TableHead>Enchère actuelle</TableHead>
+                      <TableHead>Fin</TableHead>
                       <TableHead>Statut</TableHead>
                       <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
@@ -214,7 +246,7 @@ const AdminDashboard = () => {
                     {objects.map((obj) => (
                       <TableRow key={obj.id}>
                         {editingId === obj.id ? (
-                          <TableCell colSpan={6}>
+                          <TableCell colSpan={7}>
                             <div className="space-y-4">
                               {renderFormFields()}
                               <div className="flex gap-2">
@@ -233,6 +265,9 @@ const AdminDashboard = () => {
                             <TableCell>{obj.category}</TableCell>
                             <TableCell>{obj.starting_price} €</TableCell>
                             <TableCell>{obj.current_bid} €</TableCell>
+                            <TableCell className="text-sm">
+                              {new Date(obj.ends_at).toLocaleString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" })}
+                            </TableCell>
                             <TableCell>
                               {obj.winner_user_id
                                 ? obj.payment_status === "paid"
@@ -244,6 +279,11 @@ const AdminDashboard = () => {
                             </TableCell>
                             <TableCell className="text-right">
                               <div className="flex justify-end gap-1">
+                                {!obj.winner_user_id && new Date(obj.ends_at) > new Date() && (
+                                  <Button size="icon" variant="ghost" className="text-destructive" title="Terminer maintenant" onClick={() => handleEndNow(obj.id)}>
+                                    <StopCircle className="h-4 w-4" />
+                                  </Button>
+                                )}
                                 <Button size="icon" variant="ghost" onClick={() => startEdit(obj)}>
                                   <Pencil className="h-4 w-4" />
                                 </Button>
