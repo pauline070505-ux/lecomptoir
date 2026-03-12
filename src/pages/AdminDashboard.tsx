@@ -67,10 +67,26 @@ const AdminDashboard = () => {
     navigate("/admin/login");
   };
 
+  const handleEndNow = async (id: number) => {
+    if (!confirm("Terminer cette enchère maintenant ?")) return;
+    const { error } = await supabase
+      .from("auction_objects")
+      .update({ ends_at: new Date().toISOString() })
+      .eq("id", id);
+    if (error) {
+      toast({ title: "Erreur", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Enchère terminée !" });
+      fetchObjects();
+    }
+  };
+
   const handleAdd = async () => {
+    const { ends_at, ...rest } = form;
     const { error } = await supabase.from("auction_objects").insert({
-      ...form,
+      ...rest,
       current_bid: form.starting_price,
+      ends_at: new Date(ends_at).toISOString(),
     });
     if (error) {
       toast({ title: "Erreur", description: error.message, variant: "destructive" });
