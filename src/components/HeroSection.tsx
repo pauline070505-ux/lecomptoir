@@ -1,11 +1,6 @@
-import { QrCode } from "lucide-react";
 import { motion } from "framer-motion";
 
-interface HeroSectionProps {
-  onSimulateQR: () => void;
-}
-
-export const HeroSection = ({ onSimulateQR }: HeroSectionProps) => {
+export const HeroSection = () => {
   const scrollToSection = (href: string) => {
     const element = document.querySelector(href);
     if (element) {
@@ -40,15 +35,6 @@ export const HeroSection = ({ onSimulateQR }: HeroSectionProps) => {
               className="btn-primary"
             >
               Découvrir le concept
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={onSimulateQR}
-              className="btn-outline flex items-center justify-center gap-2"
-            >
-              <QrCode size={20} />
-              Simuler un scan QR
             </motion.button>
           </div>
         </motion.div>
