@@ -17,7 +17,6 @@ import { ExperienceSection } from "@/components/ExperienceSection";
 import { PartnersSection } from "@/components/PartnersSection";
 import { ContactSection } from "@/components/ContactSection";
 import { Footer } from "@/components/Footer";
-import { QRModal } from "@/components/QRModal";
 import { AuctionModal } from "@/components/AuctionModal";
 import { DemoModal } from "@/components/DemoModal";
 import { UserDashboard } from "@/components/UserDashboard";
@@ -27,7 +26,6 @@ import { useAuctionObjects } from "@/hooks/useAuctionObjects";
 import type { AuctionObject } from "@/hooks/useAuctionObjects";
 
 const Index = () => {
-  const [isQRModalOpen, setIsQRModalOpen] = useState(false);
   const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
   const [selectedObject, setSelectedObject] = useState<AuctionObject | null>(null);
@@ -43,21 +41,8 @@ const Index = () => {
     }
   };
 
-  const handleSimulateQR = () => {
-    setIsQRModalOpen(true);
-  };
-
   const handleOpenAuction = (object: AuctionObject) => {
     setSelectedObject(object);
-  };
-
-  const handleQRSimulateAuction = () => {
-    setIsQRModalOpen(false);
-    if (auctionObjects.length > 0) {
-      const randomObject =
-        auctionObjects[Math.floor(Math.random() * auctionObjects.length)];
-      setSelectedObject(randomObject);
-    }
   };
 
   const handleStartDemo = () => {
@@ -77,7 +62,7 @@ const Index = () => {
       />
       
       <main>
-        <HeroSection onSimulateQR={handleSimulateQR} />
+        <HeroSection />
         <ConceptSection onShowDemo={() => setIsDemoModalOpen(true)} />
         <HowItWorksSection />
         <AuctionSection onOpenAuction={handleOpenAuction} />
@@ -89,11 +74,6 @@ const Index = () => {
       <Footer />
 
       {/* Modals */}
-      <QRModal
-        isOpen={isQRModalOpen}
-        onClose={() => setIsQRModalOpen(false)}
-        onSimulateAuction={handleQRSimulateAuction}
-      />
       <AuctionModal
         isOpen={selectedObject !== null}
         object={selectedObject}
