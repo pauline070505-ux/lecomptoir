@@ -17,7 +17,6 @@ import { ExperienceSection } from "@/components/ExperienceSection";
 import { PartnersSection } from "@/components/PartnersSection";
 import { ContactSection } from "@/components/ContactSection";
 import { Footer } from "@/components/Footer";
-import { QRModal } from "@/components/QRModal";
 import { AuctionModal } from "@/components/AuctionModal";
 import { DemoModal } from "@/components/DemoModal";
 import { UserDashboard } from "@/components/UserDashboard";
