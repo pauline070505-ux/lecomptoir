@@ -62,7 +62,7 @@ const Index = () => {
       />
       
       <main>
-        <HeroSection onSimulateQR={handleSimulateQR} />
+        <HeroSection />
         <ConceptSection onShowDemo={() => setIsDemoModalOpen(true)} />
         <HowItWorksSection />
         <AuctionSection onOpenAuction={handleOpenAuction} />
