@@ -74,11 +74,6 @@ const Index = () => {
       <Footer />
 
       {/* Modals */}
-      <QRModal
-        isOpen={isQRModalOpen}
-        onClose={() => setIsQRModalOpen(false)}
-        onSimulateAuction={handleQRSimulateAuction}
-      />
       <AuctionModal
         isOpen={selectedObject !== null}
         object={selectedObject}
