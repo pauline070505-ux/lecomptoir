@@ -26,7 +26,6 @@ import { useAuctionObjects } from "@/hooks/useAuctionObjects";
 import type { AuctionObject } from "@/hooks/useAuctionObjects";
 
 const Index = () => {
-  const [isQRModalOpen, setIsQRModalOpen] = useState(false);
   const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
   const [selectedObject, setSelectedObject] = useState<AuctionObject | null>(null);
