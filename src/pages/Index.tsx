@@ -41,21 +41,8 @@ const Index = () => {
     }
   };
 
-  const handleSimulateQR = () => {
-    setIsQRModalOpen(true);
-  };
-
   const handleOpenAuction = (object: AuctionObject) => {
     setSelectedObject(object);
-  };
-
-  const handleQRSimulateAuction = () => {
-    setIsQRModalOpen(false);
-    if (auctionObjects.length > 0) {
-      const randomObject =
-        auctionObjects[Math.floor(Math.random() * auctionObjects.length)];
-      setSelectedObject(randomObject);
-    }
   };
 
   const handleStartDemo = () => {
